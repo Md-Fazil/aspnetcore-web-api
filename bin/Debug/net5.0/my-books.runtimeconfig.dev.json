@@ -1,0 +1,8 @@
+{
+  "runtimeOptions": {
+    "additionalProbingPaths": [
+      "C:\\Users\\Fuzyl\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\Fuzyl\\.nuget\\packages"
+    ]
+  }
+}
