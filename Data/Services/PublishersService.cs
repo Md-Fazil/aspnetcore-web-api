@@ -27,5 +27,29 @@ namespace my_books.Data.Services
             _context.SaveChanges();
 
         }
+
+        public PublisherWithBooksAndAuthorsVM getPublisherData(int publisherId) {
+            var _publisherData = _context.Publishers.Where(n => n.Id == publisherId).Select(n => new PublisherWithBooksAndAuthorsVM
+            {
+                Name = n.Name,
+                BookAuthors = n.Books.Select(n => new BookAuthorVM()
+                {
+                    BookName = n.Title,
+                    BookAuthors = n.Book_Authors.Select(n => n.Author.FullName).ToList()
+                }).ToList()
+            }).FirstOrDefault();
+            return _publisherData;
+        }
+
+        internal void DeletePublisherById(int id)
+        {
+            var _publisher = _context.Publishers.FirstOrDefault(n => n.Id == id);
+            
+            if (_publisher != null)
+            {
+                _context.Publishers.Remove(_publisher);
+                _context.SaveChanges();
+            }
+        }
     }
 }
