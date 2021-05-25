@@ -16,6 +16,28 @@ namespace my_books.Data.Services
             _context = context;
         }
 
+        public List<Publisher> GetAllPublishers(string sortBy, string searchString)
+        {
+            var allPublishers = _context.Publishers.OrderBy(n => n.Name).ToList();
+            if (!string.IsNullOrEmpty(sortBy))
+            {
+                switch (sortBy) 
+                {
+                    case "name_desc":
+                        allPublishers = allPublishers.OrderByDescending(n => n.Name).ToList();
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                allPublishers = allPublishers.Where(n => n.Name.Contains(searchString, StringComparison.CurrentCultureIgnoreCase)).ToList();
+            }
+            return allPublishers;
+        }
+
 
         public void AddPublisher(PublisherVM publisher)
         {
@@ -25,7 +47,11 @@ namespace my_books.Data.Services
             };
             _context.Publishers.Add(_publisher);
             _context.SaveChanges();
+        }
 
+        public Publisher GetPublisherById(int id)
+        {
+            return _context.Publishers.FirstOrDefault(publisher => publisher.Id == id);
         }
 
         public PublisherWithBooksAndAuthorsVM getPublisherData(int publisherId) {
@@ -41,7 +67,7 @@ namespace my_books.Data.Services
             return _publisherData;
         }
 
-        internal void DeletePublisherById(int id)
+        public void DeletePublisherById(int id)
         {
             var _publisher = _context.Publishers.FirstOrDefault(n => n.Id == id);
             
